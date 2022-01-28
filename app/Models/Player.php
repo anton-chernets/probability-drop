@@ -28,8 +28,18 @@ class Player extends Model
 {
     use HasFactory;
 
+    private const DISPLAY_NAME_PREFIX = 'Player #';
+
     protected $fillable = [
         'display_name',
         'id_group',
     ];
+
+    public static function autoCreate(): self
+    {
+        /* @var self $player */
+        $player = self::create();
+        $player->update(['display_name' => self::DISPLAY_NAME_PREFIX . $player->id]);
+        return $player;
+    }
 }

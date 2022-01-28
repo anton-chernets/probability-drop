@@ -10,7 +10,11 @@ php artisan key:generate
 ```
 php artisan db:seed --class=DatabaseSeeder
 ```
-- api docs for testing
+- api routes
+```
+GET | www url ..api/create
+```
+- api docs Swagger for testing
 ```
 www url ../api/documentation
 ```
