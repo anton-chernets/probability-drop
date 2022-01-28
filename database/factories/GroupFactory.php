@@ -10,7 +10,8 @@ class GroupFactory extends Factory
     public function definition()
     {
         return [
-            'label' => Str::random(10),
+            'label' => Str::random(1),
+            'is_auto' => true,
         ];
     }
 }

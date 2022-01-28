@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePlayerRequest;
+use App\Http\Resources\Group\AssignedResource;
 use App\Http\Resources\Player\CreateResource;
 use App\Models\Player;
 
@@ -31,6 +32,7 @@ class PlayerController extends Controller
      *                  format="query",
      *                  @OA\Property(property="result", type="string", example="ok"),
      *                  @OA\Property(property="player", type="array", @OA\Items(ref="#/components/schemas/CreatePlayerResource")),
+     *                  @OA\Property(property="group", type="array", @OA\Items(ref="#/components/schemas/AssignedGroupResource")),
      *              ),
      *          ),
      *      ),
@@ -55,6 +57,10 @@ class PlayerController extends Controller
         } else {
             $player = Player::create($validatedData);
         }
-        return response()->json(['result' => 'ok', 'player'=> CreateResource::make($player)]);
+        return response()->json([
+            'result' => 'ok',
+            'player'=> CreateResource::make($player),
+            'group'=> AssignedResource::make($player->groups->first()),
+        ]);
     }
 }

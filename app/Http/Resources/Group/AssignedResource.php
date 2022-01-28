@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Resources\Player;
+namespace App\Http\Resources\Group;
 
-use App\Models\Player;
+use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CreateResource extends JsonResource
+class AssignedResource extends JsonResource
 {
-    /* @var Player $resource */
+    /* @var Group $resource */
     public $resource;
 
     /**
@@ -20,18 +20,18 @@ class CreateResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->resource->id,
+            'label' => $this->resource->label,
         ];
     }
 }
 
 /**
  * @OA\Schema (
- *     schema="CreatePlayerResource",
+ *     schema="AssignedGroupResource",
  *     type="object",
- *     title="Create Player Resource",
+ *     title="Assigned Group when Create Player Resource",
  *     properties={
- *         @OA\Property(property="id", type="integer"),
+ *         @OA\Property(property="label", type="string"),
  *      }
  * )
  */
