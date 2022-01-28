@@ -20,7 +20,7 @@ class AssignedResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'label' => $this->resource->label,
+            'label' => $this->resource->label ?? null,
         ];
     }
 }

@@ -60,7 +60,7 @@ class PlayerController extends Controller
         return response()->json([
             'result' => 'ok',
             'player'=> CreateResource::make($player),
-            'group'=> AssignedResource::make($player->groups->first()),
+            'group'=> AssignedResource::make($player->group),
         ]);
     }
 }

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Models\Player
@@ -14,8 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property int $id_group
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Group[] $groups
- * @property-read int|null $groups_count
+ * @property-read \App\Models\Group|null $group
  * @method static \Database\Factories\PlayerFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Player newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Player newQuery()
@@ -46,13 +45,8 @@ class Player extends Model
         return $player;
     }
 
-    public function groups(): BelongsToMany
+    public function group(): HasOne
     {
-        return $this->belongsToMany(
-            Group::class,
-            'player_to_group',
-            'player_id',
-            'group_id',
-        );
+        return $this->hasOne(Group::class, 'id', 'id_group');
     }
 }

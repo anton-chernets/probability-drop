@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\Group
@@ -13,7 +13,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string $label
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $is_auto
+ * @property bool $is_auto
+ * @property int $weight
+ * @property-read mixed $total_players
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Player[] $players
  * @property-read int|null $players_count
  * @method static \Database\Factories\GroupFactory factory(...$parameters)
@@ -25,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Group whereIsAuto($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Group whereLabel($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Group whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Group whereWeight($value)
  * @mixin \Eloquent
  */
 class Group extends Model
@@ -33,15 +36,21 @@ class Group extends Model
 
     protected $fillable = [
         'label',
+        'is_auto',
+        'weight',
     ];
 
-    public function players(): BelongsToMany
+    protected $casts = [
+        'is_auto' => 'boolean',
+    ];
+
+    public function players(): HasMany
     {
-        return $this->belongsToMany(
-            Player::class,
-            'player_to_group',
-            'id',
-            'player_id',
-        );
+        return $this->hasMany(Player::class, 'id_group', 'id');
+    }
+
+    public function getTotalPlayersAttribute()
+    {
+        return $this->players()->count();
     }
 }

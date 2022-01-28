@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Models\Group;
+use App\Models\Player;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
 
 class AutoGroupService
 {
@@ -19,12 +19,10 @@ class AutoGroupService
     public function groupAutoAssignee($player): bool
     {
         if ($this->groups->isNotEmpty()) {
-            if ($this->maxWeightsWeight() <= $this->sumWeightGroups()) {
-                $this->clearAttaching();
+            if ($this->maxWeightSum() <= $this->weightSum()) {
+                $this->clearAssigning();
             }
-            $player->groups()->attach($group = $this->groupSelection(), [
-                'group_id' => $group->id,
-            ]);
+            $player->update(['id_group' => $this->groupSelection()->id]);
             return true;
         }
         return false;
@@ -32,21 +30,26 @@ class AutoGroupService
 
     private function groupSelection(): Group
     {
-        return $this->groups->first();
+        return $this->groups->first();//TODO Weight algorithm
     }
 
-    private function sumWeightGroups(): int
+    public function weightSum(): int
     {
-        return 99;
+        $result = 0;
+        foreach ($this->groups as $group) {
+            $result += $group->total_players;
+        }
+        return $result;
     }
 
-    private function maxWeightsWeight(): int
+    private function maxWeightSum(): int
     {
-        return 100;
+        return $this->groups->sum('weight');
     }
 
-    private function clearAttaching(): void
+    private function clearAssigning(): void
     {
-        DB::table('player_to_group')->delete();
+        $players = Player::where('id_group', '!=', 0);
+        $players->update(['id_group' => 0]);
     }
 }
