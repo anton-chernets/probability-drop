@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Player;
-use App\Services\AutoGroupService;
+use App\Services\SignUpService;
 
 class PlayerObserver
 {
@@ -15,7 +15,7 @@ class PlayerObserver
      */
     public function created(Player $player)
     {
-        $result = app()->make(AutoGroupService::class)->groupAutoAssignee($player);
+        $result = app()->make(SignUpService::class)->groupAutoAssignee($player);
 
         logs()->debug('player created res=' . $result, $player->only('id','id_group'));
     }

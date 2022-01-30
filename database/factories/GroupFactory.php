@@ -11,7 +11,6 @@ class GroupFactory extends Factory
     {
         return [
             'label' => Str::random(1),
-            'is_auto' => true,
         ];
     }
 }

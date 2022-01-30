@@ -18,3 +18,11 @@ GET | www url ..api/create
 ```
 www url ../api/documentation
 ```
+- Run NPM
+```
+npm run dev
+```
+- web routes
+```
+www url ../adminpanel/groups
+```

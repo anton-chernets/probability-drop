@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\Group
@@ -15,9 +14,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property bool $is_auto
  * @property int $weight
- * @property-read mixed $total_players
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Player[] $players
- * @property-read int|null $players_count
  * @method static \Database\Factories\GroupFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Group newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Group newQuery()
@@ -43,14 +39,4 @@ class Group extends Model
     protected $casts = [
         'is_auto' => 'boolean',
     ];
-
-    public function players(): HasMany
-    {
-        return $this->hasMany(Player::class, 'id_group', 'id');
-    }
-
-    public function getTotalPlayersAttribute()
-    {
-        return $this->players()->count();
-    }
 }

@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::prefix('adminpanel')->group(function () {
+    Route::get('groups', [\App\Http\Controllers\AdminPanelController::class, 'groups']);
+});
