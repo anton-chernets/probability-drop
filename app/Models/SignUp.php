@@ -41,4 +41,12 @@ class SignUp extends Model
     {
         return self::all()->count();
     }
+
+    public static function resetState(): void
+    {
+        $ids = self::all()->pluck('id');
+        if ($ids->count()) {
+            self::whereIn('id', $ids)->delete();
+        }
+    }
 }

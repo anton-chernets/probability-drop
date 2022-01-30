@@ -17,7 +17,7 @@ class WeightFactory extends Factory
         $options = app()->make(WeightService::class)->options[Weight::all()->count()];
         return [
             'values' => json_encode($options, JSON_THROW_ON_ERROR),
-            'is_active' => true,
+            'is_active' => Weight::get()->isNotEmpty(),
         ];
     }
 }

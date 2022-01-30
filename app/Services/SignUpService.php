@@ -26,7 +26,7 @@ class SignUpService
     {
         if ($this->groups->isNotEmpty() && $this->activeWeight) {
             if ($this->maxSignUpCount() <= SignUp::currentCount()) {
-                $this->resetState();
+                SignUp::resetState();
             }
             $group = $this->algoApplyAutoGroup($this->groups->pluck('weight','id'));
             try {
@@ -73,10 +73,5 @@ class SignUpService
             }
         }
         return $this->groups->firstOrFail('id', searchValInAssocArr($arrays, random_int(1, $counter)));
-    }
-
-    private function resetState(): void
-    {
-        SignUp::whereIn('id', SignUp::all()->pluck('id'))->delete();
     }
 }

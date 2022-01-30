@@ -67,3 +67,5 @@
         </tr>
     </tbody>
 </table>
+
+<a class="btn btn-danger" href="{{route('counters.reset')}}" role="button">Reset Counters</a>

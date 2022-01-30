@@ -22,4 +22,13 @@ class AdminPanelController
 
         return view('groups', compact('groups', 'autoGroups', 'playersCount', 'weightSum'));
     }
+
+    /**
+     * Reset a listing of the resource.
+     */
+    public function reset()
+    {
+        SignUp::resetState();
+        return redirect()->back();
+    }
 }

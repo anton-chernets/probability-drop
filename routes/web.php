@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminPanelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,5 +19,6 @@ Route::get('/', function () {
 });
 
 Route::prefix('adminpanel')->group(function () {
-    Route::get('groups', [\App\Http\Controllers\AdminPanelController::class, 'groups']);
+    Route::get('groups', [AdminPanelController::class, 'groups']);
+    Route::get('reset', [AdminPanelController::class, 'reset'])->name('counters.reset');
 });
