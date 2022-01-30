@@ -26,3 +26,6 @@ npm run dev
 ```
 www url ../adminpanel/groups
 ```
+- examples different active weight
+![](resources/images/weight-3-4.png)
+![](resources/images/weight-1-2-7.png)
