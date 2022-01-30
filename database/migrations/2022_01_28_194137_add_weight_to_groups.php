@@ -15,7 +15,7 @@ class AddWeightToGroups extends Migration
     {
         Schema::table('groups', function (Blueprint $table) {
             $table->unsignedBigInteger('weight')
-                ->default(1);
+                ->nullable();
         });
     }
 

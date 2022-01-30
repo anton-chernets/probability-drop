@@ -8,6 +8,7 @@ use App\Models\Player;
 use App\Models\SignUp;
 use App\Models\Weight;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as PluckCollection;
 use Illuminate\Support\Facades\DB;
 
 class SignUpService
@@ -24,10 +25,10 @@ class SignUpService
     public function groupAutoAssignee(Player $player): bool
     {
         if ($this->groups->isNotEmpty() && $this->activeWeight) {
-            if ($this->maxSignUpCount() <= $this->signUpCount()) {
+            if ($this->maxSignUpCount() <= SignUp::currentCount()) {
                 $this->resetState();
             }
-            $group = $this->groupByWeightSelectAlgo();
+            $group = $this->algoApplyAutoGroup($this->groups->pluck('weight','id'));
             try {
                 DB::beginTransaction();
                 SignUp::create([
@@ -45,23 +46,37 @@ class SignUpService
         return false;
     }
 
-    public function signUpCount(): int
-    {
-        return SignUp::all()->count();
-    }
-
-    public function maxSignUpCount(): int
+    private function maxSignUpCount(): int
     {
         return $this->groups->sum('weight') * Weight::SIGN_UP_COEFFICIENT;
     }
 
-    private function groupByWeightSelectAlgo(): Group
+    private function algoApplyAutoGroup(PluckCollection $weightValues): Group
     {
-        return $this->groups->first();//TODO group selection algorithm
+        $arrays = [];
+        $counter = 0;
+        if (count($weightValues)) {
+            foreach ($weightValues as $key => $val) {
+                if (!is_int($val) || $val < 1) {
+                    continue;
+                } elseif ($val === 1) {
+                    $counter++;
+                    $arrays[$key][] = $counter;
+                } else {
+                    $j = 0;
+                    while ($j <= $val):
+                        $counter++;
+                        $arrays[$key][] = $counter;
+                        $j++;
+                    endwhile;
+                }
+            }
+        }
+        return $this->groups->firstOrFail('id', searchValInAssocArr($arrays, random_int(1, $counter)));
     }
 
     private function resetState(): void
     {
-        SignUp::whereIn('id',SignUp::all()->pluck('id'))->delete();
+        SignUp::whereIn('id', SignUp::all()->pluck('id'))->delete();
     }
 }

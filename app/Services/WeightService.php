@@ -19,9 +19,8 @@ class WeightService
 
     public function availableWeightValue(): ?int
     {
-        $arrWeights = json_decode($this->weight->values);
-        if (count($arrWeights)) {
-            foreach ($arrWeights as $weight) {
+        if ($this->weight->valuesCount()) {
+            foreach (json_decode($this->weight->values) as $weight) {
                 if (AutoGroup::whereWeight($weight)->exists()) {
                     continue;
                 }
@@ -29,10 +28,5 @@ class WeightService
             }
         }
         return null;
-    }
-
-    public function valuesCount()
-    {
-        return count(json_decode($this->weight->values));
     }
 }

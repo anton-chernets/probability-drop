@@ -43,4 +43,9 @@ class Weight extends Model
     {
         return self::whereIsActive(true)->first();
     }
+
+    public function valuesCount(): int
+    {
+        return count(json_decode($this->values));
+    }
 }

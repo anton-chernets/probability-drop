@@ -36,4 +36,9 @@ class SignUp extends Model
         'player_id',
         'group_id',
     ];
+
+    public static function currentCount(): int
+    {
+        return self::all()->count();
+    }
 }

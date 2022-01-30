@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property bool $is_auto
- * @property int $weight
+ * @property int|null $weight
  * @property-read mixed $percent_total_players
  * @property-read mixed $percent_total_weight
  * @property-read mixed $total_players
@@ -64,7 +64,7 @@ class AutoGroup extends Group
     public function getPercentTotalPlayersAttribute()//TODO move to service
     {
         if ($this->signUps->count()) {
-            return PERCENT_TOTAL / $this->signUps->count() * SignUp::all()->count();
+            return PERCENT_TOTAL / SignUp::all()->count() * $this->signUps->count();
         }
         return 0;
     }
