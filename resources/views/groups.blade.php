@@ -50,9 +50,9 @@
         <tr>
             <td>{{$autoGroup->label}}</td>
             <td>{{$autoGroup->weight}}</td>
-            <td>{{$autoGroup->percent_total_weight}}</td>
+            <td>{{$autoGroup->percent_total_weight}}%</td>
             <td>{{$autoGroup->total_players}}</td>
-            <td>{{$autoGroup->percent_total_players}}</td>
+            <td>{{$autoGroup->percent_total_players}}%</td>
         </tr>
     @endforeach
         @php
