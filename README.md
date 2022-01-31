@@ -26,6 +26,11 @@ npm run dev
 ```
 www url ../adminpanel/groups
 ```
+- after changed config/weight.php
+```
+composer dump-autoload
+php artisan weights:reset
+```
 - examples different active weight
 ![](resources/images/weight-3-4.png)
 ![](resources/images/weight-1-2-7.png)

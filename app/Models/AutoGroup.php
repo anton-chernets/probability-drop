@@ -68,4 +68,12 @@ class AutoGroup extends Group
         }
         return 0;
     }
+
+    public static function resetWeights(): void
+    {
+        $ids = self::whereIsAuto(true)->orWhere('weight', '!=', null)->pluck('id');
+        if ($ids->count()) {
+            self::whereIn('id', $ids)->update(['weight' => null, 'is_auto' => false]);
+        }
+    }
 }

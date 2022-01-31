@@ -6,7 +6,6 @@ use App\Models\AutoGroup;
 use App\Models\Group;
 use App\Models\Player;
 use App\Models\SignUp;
-use App\Models\Weight;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as PluckCollection;
 use Illuminate\Support\Facades\DB;
@@ -14,17 +13,17 @@ use Illuminate\Support\Facades\DB;
 class SignUpService
 {
     protected Collection $groups;
-    protected ?Weight $activeWeight;
+
+    public const SIGN_UP_COEFFICIENT = 10;
 
     public function __construct()
     {
         $this->groups = AutoGroup::all();
-        $this->activeWeight = Weight::getActiveWeight();
     }
 
     public function groupAutoAssignee(Player $player): bool
     {
-        if ($this->groups->isNotEmpty() && $this->activeWeight) {
+        if ($this->groups->isNotEmpty()) {
             if ($this->maxSignUpCount() <= SignUp::currentCount()) {
                 SignUp::resetState();
             }
@@ -48,7 +47,7 @@ class SignUpService
 
     private function maxSignUpCount(): int
     {
-        return $this->groups->sum('weight') * Weight::SIGN_UP_COEFFICIENT;
+        return $this->groups->sum('weight') * self::SIGN_UP_COEFFICIENT;
     }
 
     private function algoApplyAutoGroup(PluckCollection $weightValues): Group

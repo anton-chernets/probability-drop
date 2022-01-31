@@ -2,9 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Group;
 use App\Models\Player;
-use App\Observers\GroupObserver;
 use App\Observers\PlayerObserver;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,6 +26,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Player::observe(PlayerObserver::class);
-        Group::observe(GroupObserver::class);
     }
 }
