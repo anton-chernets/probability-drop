@@ -3,11 +3,9 @@
 namespace App\Services;
 
 use App\Models\AutoGroup;
-use App\Models\Group;
 use App\Models\Player;
 use App\Models\SignUp;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Collection as PluckCollection;
 use Illuminate\Support\Facades\DB;
 
 class SignUpService
@@ -27,7 +25,10 @@ class SignUpService
             if ($this->maxSignUpCount() <= SignUp::currentCount()) {
                 SignUp::resetState();
             }
-            $group = $this->algoApplyAutoGroup($this->groups->pluck('weight','id'));
+            $this->setChances();
+            $chances = FileService::getFromFile();
+            $groupId = searchValInAssocArr($chances, random_int(1, $chances['total']));
+            $group = $this->groups->firstOrFail('id', $groupId);
             try {
                 DB::beginTransaction();
                 SignUp::create([
@@ -36,6 +37,8 @@ class SignUpService
                 ]);
                 $player->update(['id_group' => $group->id]);
                 DB::commit();
+                unset($chances[$group->id][0]);
+                FileService::saveToFile($chances);
             } catch (\Exception $exception) {
                 DB::rollback();
                 throw $exception;
@@ -50,27 +53,43 @@ class SignUpService
         return $this->groups->sum('weight') * self::SIGN_UP_COEFFICIENT;
     }
 
-    private function algoApplyAutoGroup(PluckCollection $weightValues): Group
+    private function setChances(): void
     {
-        $arrays = [];
+        $weightValues = $this->groups->pluck('weight','id');
         $counter = 0;
+        $chances = [];
         if (count($weightValues)) {
             foreach ($weightValues as $key => $val) {
                 if (!is_int($val) || $val < 1) {
                     continue;
                 } elseif ($val === 1) {
                     $counter++;
-                    $arrays[$key][] = $counter;
+                    $chances[$key][] = $counter;
                 } else {
                     $j = 0;
                     while ($j <= $val):
                         $counter++;
-                        $arrays[$key][] = $counter;
+                        $chances[$key][] = $counter;
                         $j++;
                     endwhile;
                 }
             }
         }
-        return $this->groups->firstOrFail('id', searchValInAssocArr($arrays, random_int(1, $counter)));
+        $chances['total'] = $counter;
+        $chances['iterate'] = $this->getIterate();
+        FileService::saveToFile($chances);
+    }
+
+    private function getIterate(): int
+    {
+        $currentState = FileService::getFromFile();
+        if ($currentState && isset($currentState['iterate']) && is_numeric($currentState['iterate']))
+        {
+            $lastIterate = $currentState['iterate'];
+            if ($lastIterate < $this->groups->sum('weight')) {
+                return $lastIterate++;
+            }
+        }
+        return 1;
     }
 }
