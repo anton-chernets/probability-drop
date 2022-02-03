@@ -56,15 +56,18 @@ class AutoGroup extends Group
         return $this->signUps->count();
     }
 
-    public function getPercentTotalWeightAttribute()//TODO move to service
+    public function getPercentTotalWeightAttribute()
     {
-        return PERCENT_TOTAL / self::all()->sum('weight') * $this->weight;
+        if ($sumWeight = self::all()->sum('weight')) {
+            return PERCENT_TOTAL / $sumWeight * $this->weight;
+        }
+        return 0;
     }
 
-    public function getPercentTotalPlayersAttribute()//TODO move to service
+    public function getPercentTotalPlayersAttribute()
     {
-        if ($this->signUps->count()) {
-            return PERCENT_TOTAL / SignUp::all()->count() * $this->signUps->count();
+        if ($countSignUps = $this->signUps->count()) {
+            return PERCENT_TOTAL / $countSignUps * $this->signUps->count();
         }
         return 0;
     }
