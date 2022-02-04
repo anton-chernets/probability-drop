@@ -66,7 +66,7 @@ class AutoGroup extends Group
 
     public function getPercentTotalPlayersAttribute()
     {
-        if ($countSignUps = $this->signUps->count()) {
+        if ($countSignUps = SignUp::all()->count()) {
             return PERCENT_TOTAL / $countSignUps * $this->signUps->count();
         }
         return 0;
