@@ -16,8 +16,9 @@ class DatabaseSeeder extends Seeder
     public function run(Schedule $schedule)
     {
         // \App\Models\User::factory(10)->create();
+        Artisan::call('cache:clear');
          \App\Models\Group::factory(5)->create();
         Artisan::call('weights:reset');
-         \App\Models\Player::factory(69)->create();
+         \App\Models\Player::factory(99)->create();
     }
 }
