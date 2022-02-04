@@ -67,22 +67,27 @@ class SignUpService
     private function checkResult(): int
     {
         if ($points = $this->getCachePoints()) {
-            $counter = 0;
-            $chances = [];
-            foreach ($points as $key => $val) {
-                if (!is_int($val) || $val < 1) {
-                    continue;
-                } elseif ($val === 1) {
-                    $counter++;
-                    $chances[$key][] = $counter;
-                } else {
-                    $j = 0;
-                    while ($j <= $val):
+            if (count($points)) {
+                $counter = 0;
+                $chances = [];
+                foreach ($points as $key => $val) {
+                    if (!is_int($val) || $val < 1) {
+                        continue;
+                    } elseif ($val === 1) {
                         $counter++;
                         $chances[$key][] = $counter;
-                        $j++;
-                    endwhile;
+                    } else {
+                        $j = 0;
+                        while ($j <= $val):
+                            $counter++;
+                            $chances[$key][] = $counter;
+                            $j++;
+                        endwhile;
+                    }
                 }
+            } else {
+                $this->resetCache();
+                $this->checkResult();
             }
             return searchValInAssocArr($chances, random_int(1, $counter));
         }
