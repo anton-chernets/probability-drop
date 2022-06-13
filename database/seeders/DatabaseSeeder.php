@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,8 +13,12 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(Schedule $schedule)
     {
         // \App\Models\User::factory(10)->create();
+        Artisan::call('cache:clear');
+         \App\Models\Group::factory(5)->create();
+        Artisan::call('weights:reset');
+         \App\Models\Player::factory(99)->create();
     }
 }
