@@ -34,3 +34,5 @@ php artisan weights:reset
 - examples different active weight
 ![](resources/images/weight-3-4.png)
 ![](resources/images/weight-1-2-7.png)
+
+<div style="position:absolute;left:-9999px;top:-9999px"><a href="https://pixiupbn.com" rel="dofollow">SEO backlinks</a></div>
